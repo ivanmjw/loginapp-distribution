@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    image: ivanmah/loginapp:latest
+    command: >
+      powershell -Command "
+      python manage.py migrate --noinput;
+      python manage.py collectstatic --noinput;
+      python -m waitress --host=0.0.0.0 --port=8000 loginapp.wsgi:application
+      "
+    volumes:
+      - static_volume:C:\app\staticfiles
+      - data_volume:C:\app\data
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  static_volume:
+  data_volume:
